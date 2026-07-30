@@ -1,0 +1,4 @@
+pandas
+pydantic
+google-genai
+python-dotenv
