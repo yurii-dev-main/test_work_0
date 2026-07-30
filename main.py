@@ -436,6 +436,12 @@ def export_to_google_sheets(data: list[dict]):
             return
             
         rows_to_append = []
+        
+        # Перевіряємо, чи є вже заголовки (якщо перша строка порожня — додаємо їх)
+        if not sheet.row_values(1):
+            headers = ["ID Запиту", "Категорія", "Відділ", "Пріоритет", "Короткий опис", "Дії", "Потребує уточнення"]
+            rows_to_append.append(headers)
+            
         for d in successful:
             actions = "\n".join(d.get("requested_actions", [])) if d.get("requested_actions") else ""
             row = [
