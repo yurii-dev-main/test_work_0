@@ -43,3 +43,8 @@ poetry.lock
 *.swo
 .DS_Store
 Thumbs.db
+
+# Output Artifacts & Integrations
+output.json
+report.md
+google_credentials.json

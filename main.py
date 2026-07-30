@@ -328,17 +328,17 @@ def save_to_json(data: list[dict], filename: str = "output.json"):
     except Exception as e:
         logging.error(f"Failed to save JSON: {e}")
 
-def generate_markdown_report(data: list[dict], filename: str = "report.md") -> str:
+def generate_markdown_report(data: list[dict], filename: str = "report.html") -> str:
     """
-    Converts data to DataFrame, calculates aggregates, and formats a Markdown report.
-    Returns the markdown string.
+    Converts data to DataFrame, calculates aggregates, and formats an HTML report.
+    Returns the HTML string.
     """
     try:
         successful = [d for d in data if not d.get("_error")]
         df_res = pd.DataFrame(successful)
         
         if df_res.empty:
-            report = "## Analytics Report\nNo successful requests to analyze."
+            report = "<b>📊 Аналітичний звіт</b>\n\nНемає успішних запитів для аналізу."
         else:
             cat_counts = df_res["category"].value_counts().to_dict()
             prio_counts = df_res["priority"].value_counts().to_dict()
@@ -347,28 +347,33 @@ def generate_markdown_report(data: list[dict], filename: str = "report.md") -> s
             
             clarification_ids = df_res[df_res["needs_clarification"] == True]["request_id"].tolist()
             
-            report = "## Analytics Report\n\n"
-            report += "### Categories\n"
+            report = "<b>📊 Аналітичний звіт</b>\n\n"
+            
+            report += "<b>📁 Категорії:</b>\n"
             for k, v in cat_counts.items():
-                report += f"- **{k}**: {v}\n"
+                report += f"• {k}: {v}\n"
                 
-            report += "\n### Priorities\n"
+            report += "\n<b>🔴 Пріоритети:</b>\n"
             for k, v in prio_counts.items():
-                report += f"- **{k}**: {v}\n"
+                report += f"• {k}: {v}\n"
                 
-            report += "\n### Target Departments\n"
+            report += "\n<b>🏢 Відділи:</b>\n"
             if dept_counts:
                 for k, v in dept_counts.items():
-                    report += f"- **{k}**: {v}\n"
+                    report += f"• {k}: {v}\n"
             else:
-                report += "No departments specified.\n"
+                report += "Не вказано.\n"
                 
-            report += "\n### Needs Clarification\n"
+            report += "\n<b>⚠️ Потребують уточнення (ID):</b>\n"
             if clarification_ids:
-                report += f"The following {len(clarification_ids)} requests need clarification:\n"
                 report += ", ".join(clarification_ids) + "\n"
             else:
-                report += "None.\n"
+                report += "Немає.\n"
+                
+        # Link to Google Sheets
+        sheet_id = os.getenv("SPREADSHEET_ID")
+        if sheet_id:
+            report += f"\n<a href=\"https://docs.google.com/spreadsheets/d/{sheet_id}\">🔗 Відкрити Google Таблицю</a>\n"
                 
         with open(filename, "w", encoding="utf-8") as f:
             f.write(report)
@@ -376,7 +381,7 @@ def generate_markdown_report(data: list[dict], filename: str = "report.md") -> s
         return report
     except Exception as e:
         logging.error(f"Failed to generate report: {e}")
-        return f"Error generating report: {e}"
+        return f"Помилка генерації звіту: {e}"
 
 
 # ---------------------------------------------------------------------------
@@ -397,7 +402,8 @@ def send_telegram_notification(text: str):
         payload = {
             "chat_id": chat_id,
             "text": text,
-            "parse_mode": "Markdown"
+            "parse_mode": "HTML",
+            "disable_web_page_preview": True
         }
         resp = requests.post(url, json=payload, timeout=10)
         resp.raise_for_status()

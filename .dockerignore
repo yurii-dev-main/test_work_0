@@ -1,0 +1,15 @@
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+.idea/
+.vscode/
+google_credentials.json
+output.json
+report.md
