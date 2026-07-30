@@ -13,3 +13,4 @@ venv/
 google_credentials.json
 output.json
 report.md
+report.html

@@ -47,4 +47,5 @@ Thumbs.db
 # Output Artifacts & Integrations
 output.json
 report.md
+report.html
 google_credentials.json
