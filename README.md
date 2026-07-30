@@ -29,9 +29,16 @@
    ```bash
    docker build -t ai-classifier .
    ```
-2. Запустіть контейнер. Зверніть увагу, що файли `input_requests.csv` та `google_credentials.json` мають бути прокинуті всередину контейнера через volume, так само як і файл `.env`:
+2. Запустіть контейнер. Зверніть увагу, що файли `input_requests.csv` та `google_credentials.json` мають бути прокинуті всередину контейнера через volume, так само як і файл `.env`.
+
+   **Для Linux / macOS (Bash):**
    ```bash
    docker run --env-file .env -v $(pwd)/input_requests.csv:/app/input_requests.csv -v $(pwd)/google_credentials.json:/app/google_credentials.json ai-classifier
+   ```
+
+   **Для Windows (PowerShell):**
+   ```powershell
+   docker run --env-file .env -v "${PWD}/input_requests.csv:/app/input_requests.csv" -v "${PWD}/google_credentials.json:/app/google_credentials.json" ai-classifier
    ```
 
 ## ⚙️ Змінні оточення (.env)
