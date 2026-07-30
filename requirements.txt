@@ -1,4 +1,7 @@
-pandas
-pydantic
 google-genai
+pandas
 python-dotenv
+pydantic
+requests
+gspread
+google-auth
